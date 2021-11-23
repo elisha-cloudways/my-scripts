@@ -14,14 +14,20 @@ wp config set FS_METHOD direct
 
 if test -z "$prefix"
 then
-        echo $'\n'$(tput setaf 2)WP-config updated successfully$(tput setaf 7) $'\n'
+        echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
         else
                 wp config set table_prefix $prefix
-                echo $'\n'$(tput setaf 2)WP-config updated successfully$(tput setaf 7) $'\n'
+                echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
         fi
 
 wp config list
+
+# Reset Database
+echo $'\n'Resetting existing database...
+wp db reset --yes
+
 # Import source DB
+echo $'\n'Importing source MySQL file...
 wp db import $db.sql
 
 #echo $(tput setaf 2)Database has been imported$'\n'
@@ -56,7 +62,15 @@ done
 }
 
 confirmation;
-echo $'\n'Running Search and replace...
+echo $'\n'Running search and replace...
 wp search-replace "$srcURL" "$destURL" --all-tables
+echo "$(tput setaf 2)Success: $(tput setaf 7)WP Search and Replace complete."
 
-echo "$(tput setaf 2)WP Search and Replace complete. Proceed with  migration checks. Adios!"
+echo $'\n'Removing WP cache...
+wp cache flush
+echo "$(tput setaf 7)Removing cache content in wp-content/cache..."
+rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
+
+echo "$(tput setaf 2)Success: $(tput setaf 7)Cache deleted in wp-content/cache."
+echo "Purge Vanish and proceed with migration checks. Adios!"
+exit;

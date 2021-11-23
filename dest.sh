@@ -1,7 +1,8 @@
 #!/bin/bash
 db=$1
 pw=$2
-prefix=$3
+# prefix=$3
+tab_prefix=$(<prefix.txt);
 
 # Reset Database
 wp db reset --yes
@@ -9,16 +10,17 @@ wp db reset --yes
 wp config set DB_NAME $db
 wp config set DB_USER $db
 wp config set DB_PASSWORD $pw
+wp config set table_prefix $tab_prefix
 wp config set DB_HOST localhost
 wp config set FS_METHOD direct
 
-if test -z "$prefix"
-then
-        echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
-        else
-                wp config set table_prefix $prefix
-                echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
-        fi
+#if test -z "$prefix"
+#then
+#        echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
+#        else
+#                wp config set table_prefix $prefix
+#                echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
+#        fi
 
 wp config list
 

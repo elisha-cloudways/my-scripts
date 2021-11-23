@@ -4,9 +4,6 @@ pw=$2
 # prefix=$3
 tab_prefix=$(<prefix.txt);
 
-# Reset Database
-wp db reset --yes
-
 wp config set DB_NAME $db
 wp config set DB_USER $db
 wp config set DB_PASSWORD $pw

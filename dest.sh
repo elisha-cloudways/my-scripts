@@ -72,5 +72,5 @@ echo "$(tput setaf 7)Removing cache content in wp-content/cache..."
 rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
 
 echo "$(tput setaf 2)Success: $(tput setaf 7)Cache deleted in wp-content/cache."
-echo "Purge Vanish and proceed with migration checks. Adios!"
+echo "Proceed with migration checks. Adios!"
 exit;

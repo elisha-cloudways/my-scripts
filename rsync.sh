@@ -16,6 +16,3 @@ then
 else
         rsync -avuz --progress $path $user@$ip://home/master/applications/$db/public_html
 fi
-
-6
-tab_prefix=

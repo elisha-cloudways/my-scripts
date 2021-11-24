@@ -40,7 +40,7 @@ wp config set table_prefix $tab_prefix
 wp config set DB_HOST localhost
 wp config set FS_METHOD direct
 
-echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n':::::
+echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
 #if test -z "$prefix"
 #then
 #        echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'

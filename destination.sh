@@ -102,4 +102,8 @@ rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
 
 echo "$(tput setaf 2)Success: $(tput setaf 7)Cache deleted in wp-content/cache."
 echo "Proceed with migration checks. Adios!"
+rm ./$db.sql
+rm ./prefix.txt
+rm ./source.sh
+rm ./desintation.sh
 exit;

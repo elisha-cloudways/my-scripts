@@ -5,3 +5,5 @@ for A in $(ls -l /home/master/applications/| grep "^d" | awk '{print $NF}'); do 
 for A in $(ls | awk '{print $NF}'); do echo $A && sudo apm traffic -s $A -l 1d; done
 for A in $(ls | awk '{print $NF}'); do echo $A && sudo apm mysql -s $A -l 1d; done
 for A in $(ls | awk '{print $NF}'); do echo $A && sudo apm php -s $A -l 1d; done
+
+rm /cpu-apm.sh

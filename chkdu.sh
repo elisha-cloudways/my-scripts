@@ -6,6 +6,7 @@ for d in ./*/
 do
         echo $'\n'$d
         sudo apm -s $d -d
+        echo App folder taking most space: $'\n'
         du -h -d2 $d* | sort -hr | head -n 4
 done
 cd

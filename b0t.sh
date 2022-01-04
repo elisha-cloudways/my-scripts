@@ -5,5 +5,6 @@ do
         echo $'\n'$d
         cat $d/logs/apache_*.access.log | awk -F\" '{print $6}' | sort | uniq -c | sort -nr | head -20 | grep bot
 done
+cd -
 rm ./b0t.sh
 exit;

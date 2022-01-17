@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apm;
 echo Fetching logs to debug $(tput setaf 1)Server Load$(tput setaf 7) ...;
 cd /home/master/applications/
 # for A in $(ls -l /home/master/applications/| grep "^d" | awk '{print $NF}'); do echo $A && awk '{print $1,$7}' /home/master/applications/$A/logs/apache_*.access.log | cut -d? -f1 | sort | uniq -c |sort -nr | head -n 5 | awk -F";" '{print $1}' ; done

@@ -49,7 +49,29 @@ fi
 # Check if variables are provided when running the script
 if [ -z $dest_db ] && [ -z $ssh_user ] && [ -z $dest_ip ]; then
         get_credentials;
-        else
-                verify_creds;
+        verify_creds;
+else
+        verify_creds;
 fi
+
+# Export database 
+export_db(){
+echo Exporting database...
+mysqldump --no-create-db -u $srcusr -p$srcpwd $srcdb > $dest_db.sql   
+# wp db export --no-create-db=true $dest_db.sql
+}
+export_db;
+
+# Move files to the Cloudways server 
+rsync_files(){
+if [ -z "$path" ]
+then
+        echo $'\n'Transferring files...
+        rsync -avuz --progress $webroot $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
+else
+        echo $'\n'Transferring files...
+        rsync -avuz --progress $path $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
+fi
+}
+rsync_files;
 exit;

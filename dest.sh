@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:10 PST 18/01/22
+# Updated 13:11 PST 18/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -11,7 +11,7 @@ get_db(){
         read -p 'DB name(Destination): ' dest_db
 }
 get_pw(){
-        read -p 'Server IP(Destination): ' dest_db_pw
+        read -p 'DB Password(Destination): ' dest_db_pw
 }
 
 echo $(tput setaf 3)P.S. $(tput setaf 7)Reset Permissions to Master User on UI before proceeding$'\n'

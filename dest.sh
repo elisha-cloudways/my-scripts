@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 12:15 PST 18/01/22
+# Updated 12:35 PST 18/01/22
 set -e
 db=$1
 pw=$2

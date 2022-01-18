@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 11:53 PST 18/01/22
+# Updated 12:15 PST 18/01/22
 set -e
 
 dest_db=$1
@@ -58,7 +58,7 @@ fi
 # Export database 
 export_db(){
 echo Exporting database...
-# mysqldump --no-create-db -u $srcusr -p$srcpwd $srcdb > $dest_db.sql   
+mysqldump --no-create-db -u $srcusr -p$srcpwd $srcdb > $dest_db.sql   
 # wp db export --no-create-db=true $dest_db.sql
 }
 export_db;
@@ -68,10 +68,10 @@ rsync_files(){
 if [ -z "$path" ]
 then
         echo $'\n'Transferring files...
-        #rsync -avuz --progress $webroot $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
+        rsync -avuz --progress $webroot $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
 else
         echo $'\n'Transferring files...
-        #rsync -avuz --progress $path $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
+        rsync -avuz --progress $path $ssh_user@$dest_ip://home/master/applications/$dest_db/public_html
 fi
 }
 rsync_files;
@@ -82,20 +82,20 @@ select yn in "Export db again" "Run rsync again"; do
     case $yn in
         "Export db again" ) export_db; rsync_files; break;;
         "Run rsync again" ) rsync_files; break;;
-        *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY";;
+        *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;
     esac
 done
 }
 
 exit_(){
-echo '\n'Transfer Complete?;
+echo $'\n'Transfer Complete?;
 PS3='Please enter your choice: '
 options=("Yes" "No")
 select opt in "${options[@]}"
 do
     case $opt in
         "Yes")
-                echo Exiting...;
+                echo $'\n'Exiting...;
                 break
             ;;
         "No")
@@ -103,7 +103,7 @@ do
                 exit_;
                 break
             ;;
-        *) echo $(tput setaf 1)Invalid option (tput setaf 7)$REPLY$;;
+        *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;
     esac
 done
 }

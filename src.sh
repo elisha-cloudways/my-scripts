@@ -77,7 +77,7 @@ fi
 rsync_files;
 
 menu(){
-        echo '\n';
+        echo $'\n';
 select yn in "Export db again" "Run rsync again"; do
     case $yn in
         "Export db again" ) export_db; rsync_files; break;;

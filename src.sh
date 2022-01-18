@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 12:15 PST 18/01/22
+# Updated 13:53 PST 18/01/22
 set -e
 
 dest_db=$1
@@ -108,4 +108,6 @@ do
 done
 }
 exit_;
+rm ./prefix.txt
+rm ./src.sh
 exit;

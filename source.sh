@@ -1,3 +1,5 @@
+#!/bin/bash
+# Updated 11:50 PST 18/01/22
 path=$1
 echo $(wp config get table_prefix) > prefix.txt
 webroot=$(pwd)/

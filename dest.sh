@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:02 PST 18/01/22
+# Updated 13:10 PST 18/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -21,11 +21,10 @@ get_credentials(){
 get_db;
 get_pw;
 }
-if [ -z $dest_db ] && [ -z $dest_db_pw ]; then
-        get_credentials;
-else
-       # Test MySQL credentials
-       until [[ $dbaccess = "success" ]]; do
+
+# Test MySQL credentials
+verify_creds(){
+        until [[ $dbaccess = "success" ]]; do
                echo "Verifying MySQL credentials..."
                mysql --user="${dest_db}" --password="${dest_db_pw}" -e exit 2>/dev/null
                dbstatus=`echo $?`
@@ -41,6 +40,14 @@ else
                        echo $(tput setaf 2)Success: $(tput setaf 7)Database credentials verified $'\n'
                fi
        done
+}
+
+# Check if db details are provided when running the script
+if [ -z $dest_db ] && [ -z $dest_db_pw ]; then
+        get_credentials;
+        verify_creds;
+else
+        verify_creds;      
 fi
 
 wp config set DB_NAME $dest_db
@@ -66,7 +73,7 @@ wp db reset --yes
 
 # Import source DB
 echo $'\n'Importing source MySQL file...
-wp db import $db.sql
+wp db import $dest_db.sql
 
 #echo $(tput setaf 2)Database has been imported$'\n'
 # Fetch Source Domain

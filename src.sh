@@ -110,4 +110,5 @@ done
 exit_;
 rm ./prefix.txt
 rm ./src.sh
+rm ./$dest_db.sql
 exit;

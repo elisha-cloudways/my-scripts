@@ -1,4 +1,5 @@
 #!/bin/bash
+# Updated 11:53 PST 18/01/22
 set -e
 
 dest_db=$1

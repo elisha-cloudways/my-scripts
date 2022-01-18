@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:11 PST 18/01/22
+# Updated 13:26 PST 18/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -78,7 +78,7 @@ wp db import $dest_db.sql
 #echo $(tput setaf 2)Database has been imported$'\n'
 # Fetch Source Domain
 # srcURL=$(wp db query 'SELECT * FROM wp_options WHERE option_name="siteurl"' --skip-column-names | awk '{print $3}')
-read -p "Enter site URL:" srcURL
+read -p "Enter site URL: " srcURL
 destURL="https://$(cat /home/master/applications/$dest_db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
 
 # Print out source and destination URLs before search-replace
@@ -93,6 +93,10 @@ get_destURL() {
        read -p 'Enter Destination URL: ' destURL
        #echo "$name"
 }
+get_srcURL() {
+       read -p 'Enter Source URL: ' srcURL
+       #echo "$name"
+}
 confirmation(){
         #echo "Do you wish to proceed?" \ && echo "Source = $srcURL" \ && echo "Destination = $destURL"\ && echo "Enter (1,2,3):"
         #echo $(tput setaf 7)$'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $'\n'Do you wish to proceed? Enter (1,2 or 3):$'\n' 
@@ -104,6 +108,31 @@ confirmation(){
               "Re-enter Destination URL" ) get_destURL; confirmation;;
               *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;       
         esac
+done
+}
+
+confirmation(){
+        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
+        PS3='Please enter your choice: '
+        options=("Yes" "No" "Re-enter Destination URL" "Re-enter Source URL")
+        select opt in "${options[@]}"
+        do
+        case $opt in
+        "Yes")
+                break
+                ;;
+        "Re-enter Source URL")
+                get_srcURL;
+                confirmation;  
+                break
+                ;;
+        "Re-enter Destination URL")
+                get_destURL;
+                confirmation;  
+                break
+                ;;
+        *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;
+    esac
 done
 }
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:53 PST 18/01/22
+# Updated 14:04 PST 18/01/22
 set -e
 
 dest_db=$1
@@ -108,7 +108,7 @@ do
 done
 }
 exit_;
-rm ./prefix.txt
-rm ./src.sh
-rm ./$dest_db.sql
+rm -rf ./prefix.txt
+rm -rf ./src.sh
+rm -rf ./$dest_db.sql
 exit;

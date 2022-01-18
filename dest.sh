@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:31 PST 18/01/22
+# Updated 13:50 PST 18/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -91,7 +91,7 @@ get_srcURL() {
 }
 
 confirmation(){
-        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?"
+        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;
         PS3='Please enter your choice: '
         options=("Yes" "Re-enter Source URL" "Re-enter Destination URL")
         select opt in "${options[@]}"

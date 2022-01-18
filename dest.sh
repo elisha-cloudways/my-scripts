@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:26 PST 18/01/22
+# Updated 13:31 PST 18/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -57,14 +57,6 @@ wp config set table_prefix $tab_prefix
 wp config set DB_HOST localhost
 wp config set FS_METHOD direct
 
-#if test -z "$prefix"
-#then
-#        echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
-#        else
-#                wp config set table_prefix $prefix
-#                echo $'\n'$(tput setaf 2)Success: $(tput setaf 7)WP-config updated successfully$(tput setaf 7) $'\n'
-#        fi
-
 wp config list
 
 # Reset Database
@@ -97,24 +89,11 @@ get_srcURL() {
        read -p 'Enter Source URL: ' srcURL
        #echo "$name"
 }
-confirmation(){
-        #echo "Do you wish to proceed?" \ && echo "Source = $srcURL" \ && echo "Destination = $destURL"\ && echo "Enter (1,2,3):"
-        #echo $(tput setaf 7)$'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $'\n'Do you wish to proceed? Enter (1,2 or 3):$'\n' 
-        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
-        select yn in "Yes" "No" "Re-enter Destination URL"; do
-        case $yn in
-              Yes ) break;;
-              No ) echo $'\n'$(tput setaf 1)Exiting...$(tput setaf 7); exit;;
-              "Re-enter Destination URL" ) get_destURL; confirmation;;
-              *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;       
-        esac
-done
-}
 
 confirmation(){
-        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
+        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?"
         PS3='Please enter your choice: '
-        options=("Yes" "No" "Re-enter Destination URL" "Re-enter Source URL")
+        options=("Yes" "Re-enter Source URL" "Re-enter Destination URL")
         select opt in "${options[@]}"
         do
         case $opt in

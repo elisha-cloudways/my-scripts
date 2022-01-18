@@ -1,4 +1,6 @@
 #!/bin/bash
+# Updated 12:15 PST 18/01/22
+set -e
 db=$1
 pw=$2
 # prefix=$3
@@ -31,8 +33,8 @@ wp db import $db.sql
 
 #echo $(tput setaf 2)Database has been imported$'\n'
 # Fetch Source Domain
-srcURL=$(wp db query 'SELECT * FROM wp_options WHERE option_name="siteurl"' --skip-column-names | awk '{print $3}')
-
+# srcURL=$(wp db query 'SELECT * FROM wp_options WHERE option_name="siteurl"' --skip-column-names | awk '{print $3}')
+read -p "Enter site URL:" srcURL
 destURL="https://$(cat /home/master/applications/$db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
 
 # Print out source and destination URLs before search-replace
@@ -53,9 +55,10 @@ confirmation(){
         echo $(tput setaf 7)$'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $'\n'$(tput setaf 7)$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
         select yn in "Yes" "No" "Re-enter Destination URL"; do
         case $yn in
-                Yes ) break;;
-                No ) echo $'\n'$(tput setaf 1)Exiting...$(tput setaf 7); exit;;
-                "Re-enter Destination URL" ) get_destURL; confirmation;;
+              Yes ) break;;
+              No ) echo $'\n'$(tput setaf 1)Exiting...$(tput setaf 7); exit;;
+              "Re-enter Destination URL" ) get_destURL; confirmation;;
+              *) echo $(tput setaf 1)Invalid option $(tput setaf 7)$REPLY;;       
         esac
 done
 }

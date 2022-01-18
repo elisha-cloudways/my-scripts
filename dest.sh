@@ -1,14 +1,51 @@
 #!/bin/bash
-# Updated 12:35 PST 18/01/22
+# Updated 13:02 PST 18/01/22
 set -e
-db=$1
-pw=$2
+dest_db=$1
+dest_db_pw=$2
 # prefix=$3
+dbaccess="denied"
 tab_prefix=$(<prefix.txt);
 
-wp config set DB_NAME $db
-wp config set DB_USER $db
-wp config set DB_PASSWORD $pw
+get_db(){
+        read -p 'DB name(Destination): ' dest_db
+}
+get_pw(){
+        read -p 'Server IP(Destination): ' dest_db_pw
+}
+
+echo $(tput setaf 3)P.S. $(tput setaf 7)Reset Permissions to Master User on UI before proceeding$'\n'
+
+# Function to get destination details
+get_credentials(){
+get_db;
+get_pw;
+}
+if [ -z $dest_db ] && [ -z $dest_db_pw ]; then
+        get_credentials;
+else
+       # Test MySQL credentials
+       until [[ $dbaccess = "success" ]]; do
+               echo "Verifying MySQL credentials..."
+               mysql --user="${dest_db}" --password="${dest_db_pw}" -e exit 2>/dev/null
+               dbstatus=`echo $?`
+               if [ $dbstatus -ne 0 ]; then
+                       #echo -e "Destination MySQL Username [$dest_db]: \c "
+                       #read dbuser
+                       echo $(tput setaf 1)Failed: $(tput setaf 7)Incorrect database credentials $'\n'
+                       get_db;
+                       get_pw;
+               else
+                       dbaccess="success"
+                       #echo "Success!"
+                       echo $(tput setaf 2)Success: $(tput setaf 7)Database credentials verified $'\n'
+               fi
+       done
+fi
+
+wp config set DB_NAME $dest_db
+wp config set DB_USER $dest_db
+wp config set DB_PASSWORD $dest_db_pw
 wp config set table_prefix $tab_prefix
 wp config set DB_HOST localhost
 wp config set FS_METHOD direct
@@ -35,10 +72,10 @@ wp db import $db.sql
 # Fetch Source Domain
 # srcURL=$(wp db query 'SELECT * FROM wp_options WHERE option_name="siteurl"' --skip-column-names | awk '{print $3}')
 read -p "Enter site URL:" srcURL
-destURL="https://$(cat /home/master/applications/$db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
+destURL="https://$(cat /home/master/applications/$dest_db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
 
 # Print out source and destination URLs before search-replace
-echo $(tput setaf 7) $'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $(tput setaf 7)
+echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
 #exit;
 
 # Search-replace dry run
@@ -52,7 +89,7 @@ get_destURL() {
 confirmation(){
         #echo "Do you wish to proceed?" \ && echo "Source = $srcURL" \ && echo "Destination = $destURL"\ && echo "Enter (1,2,3):"
         #echo $(tput setaf 7)$'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $'\n'Do you wish to proceed? Enter (1,2 or 3):$'\n' 
-        echo $(tput setaf 7)$'\n'Source = $(tput setaf 3)$srcURL $'\n'$(tput setaf 7)Destination = $(tput setaf 3)$destURL $'\n'$(tput setaf 7)$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
+        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)? "Enter (1,2 or 3):"
         select yn in "Yes" "No" "Re-enter Destination URL"; do
         case $yn in
               Yes ) break;;

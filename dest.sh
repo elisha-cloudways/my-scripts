@@ -124,6 +124,10 @@ echo $'\n'Removing WP cache...
 wp cache flush
 echo "$(tput setaf 7)Removing cache content in wp-content/cache..."
 rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
+rm ./prefix.txt
+rm ./src.sh
+rm ./dest.sh
+rm $dest_db.sql
 
 echo "$(tput setaf 2)Success: $(tput setaf 7)Cache deleted in wp-content/cache."
 echo "Proceed with migration checks. Adios!"

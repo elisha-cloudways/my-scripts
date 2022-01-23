@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 14:04 PST 18/01/22
+# Updated 22:21 PST 23/01/22
 set -e
 
 dest_db=$1
@@ -9,9 +9,6 @@ path=$4
 
 # Fetch source table_prefix
 sed -n "s/^.*\$table_prefix *= *'\([^']*\)'.*\$/\1/p" wp-config.php > conf-data.txt
-
-# Fetch source URL
-mysql -u $srcusr -p$srcpwd -NB $srcdb -e "SELECT option_value FROM wp_options WHERE option_name = 'home';" >> conf-data.txt
 
 # Fetch Source database details
 srcdb=$(sed -n "s/define( *'DB_NAME', *'\([^']*\)'.*/\1/p" wp-config.php)
@@ -57,6 +54,9 @@ if [ -z $dest_db ] && [ -z $ssh_user ] && [ -z $dest_ip ]; then
 else
         verify_creds;
 fi
+
+# Fetch source URL
+mysql -u $srcusr -p$srcpwd -NB $srcdb -e "SELECT option_value FROM wp_options WHERE option_name = 'home';" >> conf-data.txt
 
 # Export database 
 export_db(){

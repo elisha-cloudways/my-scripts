@@ -5,7 +5,8 @@ dest_db=$1
 dest_db_pw=$2
 # prefix=$3
 dbaccess="denied"
-tab_prefix=$(<prefix.txt);
+tab_prefix=$(head -n1 conf-data.txt);
+srcURL=$(tail -n1 conf-data.txt);
 
 get_db(){
         read -p 'DB name(Destination): ' dest_db
@@ -67,16 +68,16 @@ wp db reset --yes
 echo $'\n'Importing source MySQL file...
 wp db import $dest_db.sql
 
-#echo $(tput setaf 2)Database has been imported$'\n'
-# Fetch Source Domain
-# srcURL=$(wp db query 'SELECT * FROM wp_options WHERE option_name="siteurl"' --skip-column-names | awk '{print $3}')
-read -p "Enter site URL: " srcURL
 destURL="https://$(cat /home/master/applications/$dest_db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
 
-# Print out source and destination URLs before search-replace
-echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
-#exit;
-
+# Fetch Source Domain if empty
+if [ -z "$srcURL" ]
+then
+        read -p "Enter site domain: " srcURL;
+else
+        # Print out source and destination URLs before search-replace
+        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
+fi
 # Search-replace dry run
 echo $'\n'Search and replace dry run...
 wp search-replace "$srcURL" "https://$destURL" --all-tables --dry-run
@@ -124,7 +125,7 @@ echo $'\n'Removing WP cache...
 wp cache flush
 echo "$(tput setaf 7)Removing cache content in wp-content/cache..."
 rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
-rm -rf ./prefix.txt
+rm -rf ./conf-data.txt
 rm -rf ./src.sh
 rm -rf ./dest.sh
 rm -rf ./$dest_db.sql

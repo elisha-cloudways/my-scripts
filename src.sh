@@ -8,7 +8,10 @@ dest_ip=$3
 path=$4
 
 # Fetch source table_prefix
-sed -n "s/^.*\$table_prefix *= *'\([^']*\)'.*\$/\1/p" wp-config.php > prefix.txt
+sed -n "s/^.*\$table_prefix *= *'\([^']*\)'.*\$/\1/p" wp-config.php > conf-data.txt
+
+# Fetch source URL
+mysql -u $srcusr -p$srcpwd -NB $srcdb -e "SELECT option_value FROM wp_options WHERE option_name = 'home';" >> conf-data.txt
 
 # Fetch Source database details
 srcdb=$(sed -n "s/define( *'DB_NAME', *'\([^']*\)'.*/\1/p" wp-config.php)
@@ -108,7 +111,7 @@ do
 done
 }
 exit_;
-rm -rf ./prefix.txt
+rm -rf ./conf-data.txt
 rm -rf ./src.sh
 rm -rf ./$dest_db.sql
 exit;

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:50 PST 18/01/22
+# Updated 18:21 PST 24/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -70,26 +70,32 @@ wp db import $dest_db.sql
 
 destURL="https://$(cat /home/master/applications/$dest_db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
 
+get_destURL() {
+        read -p 'Enter Destination URL: ' destURL
+        destHTTP=$(echo $destURL | sed 's/https:/http:/i');
+        destHTTPS=$(echo $destURL | sed 's/http:/https:/i');
+        #echo "$name"
+}
+get_srcURL() {
+        read -p 'Enter Source URL: ' srcURL
+        srcHTTP=$(echo $srcURL | sed 's/https:/http:/i');
+        srcHTTPS=$(echo $srcURL | sed 's/http:/https:/i');
+        #echo "$name"
+}
+
 # Fetch Source Domain if empty
 if [ -z "$srcURL" ]
 then
-        read -p "Enter site domain: " srcURL;
+        get_srcURL;
 else
+        srcHTTP=$(echo $srcURL | sed 's/https:/http:/i');
+        srcHTTPS=$(echo $srcURL | sed 's/http:/https:/i');
         # Print out source and destination URLs before search-replace
-        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
+        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcHTTPS $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
 fi
 # Search-replace dry run
 echo $'\n'Search and replace dry run...
-wp search-replace "$srcURL" "https://$destURL" --all-tables --dry-run
-
-get_destURL() {
-       read -p 'Enter Destination URL: ' destURL
-       #echo "$name"
-}
-get_srcURL() {
-       read -p 'Enter Source URL: ' srcURL
-       #echo "$name"
-}
+wp search-replace "$srcHTTPS" "$destURL" --all-tables --dry-run
 
 confirmation(){
         echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;
@@ -118,7 +124,8 @@ done
 
 confirmation;
 echo $'\n'Running search and replace...
-wp search-replace "$srcURL" "$destURL" --all-tables
+wp search-replace "$srcHTTP" "$destHTTP" --all-tables
+wp search-replace "$srcHTTPS" "$destHTTPS" --all-tables
 echo "$(tput setaf 2)Success: $(tput setaf 7)WP Search and Replace complete."
 
 echo $'\n'Removing WP cache...

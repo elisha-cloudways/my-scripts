@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 18:21 PST 24/01/22
+# Updated 19:17 PST 24/01/22
 set -e
 dest_db=$1
 dest_db_pw=$2
@@ -7,6 +7,8 @@ dest_db_pw=$2
 dbaccess="denied"
 tab_prefix=$(head -n1 conf-data.txt);
 srcURL=$(tail -n1 conf-data.txt);
+srcHTTP=$(echo $srcURL | sed 's/https:/http:/i');
+srcHTTPS=$(echo $srcURL | sed 's/http:/https:/i');
 
 get_db(){
         read -p 'DB name(Destination): ' dest_db
@@ -69,10 +71,9 @@ echo $'\n'Importing source MySQL file...
 wp db import $dest_db.sql
 
 destURL="https://$(cat /home/master/applications/$dest_db/conf/server.apache  | grep ServerName |  awk '{print $2}')"
-
+destHTTPS=$(echo $destURL | sed 's/http:/https:/i');
 get_destURL() {
         read -p 'Enter Destination URL: ' destURL
-        destHTTP=$(echo $destURL | sed 's/https:/http:/i');
         destHTTPS=$(echo $destURL | sed 's/http:/https:/i');
         #echo "$name"
 }
@@ -88,17 +89,15 @@ if [ -z "$srcURL" ]
 then
         get_srcURL;
 else
-        srcHTTP=$(echo $srcURL | sed 's/https:/http:/i');
-        srcHTTPS=$(echo $srcURL | sed 's/http:/https:/i');
         # Print out source and destination URLs before search-replace
-        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcHTTPS $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL
+        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS
 fi
 # Search-replace dry run
 echo $'\n'Search and replace dry run...
-wp search-replace "$srcHTTPS" "$destURL" --all-tables --dry-run
+wp search-replace "$srcURL" "$destHTTPS" --all-tables --dry-run
 
 confirmation(){
-        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destURL$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;
+        echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;
         PS3='Please enter your choice: '
         options=("Yes" "Re-enter Source URL" "Re-enter Destination URL")
         select opt in "${options[@]}"
@@ -124,14 +123,14 @@ done
 
 confirmation;
 echo $'\n'Running search and replace...
-wp search-replace "$srcHTTP" "$destHTTP" --all-tables
+wp search-replace "$srcHTTP" "$destHTTPS" --all-tables
 wp search-replace "$srcHTTPS" "$destHTTPS" --all-tables
 echo "$(tput setaf 2)Success: $(tput setaf 7)WP Search and Replace complete."
 
 echo $'\n'Removing WP cache...
 wp cache flush
 echo "$(tput setaf 7)Removing cache content in wp-content/cache..."
-rm -rf /home/master/applications/$db/public_html/wp-content/cache/*
+rm -rf /home/master/applications/$dest_db/public_html/wp-content/cache/*
 rm -rf ./conf-data.txt
 rm -rf ./src.sh
 rm -rf ./dest.sh

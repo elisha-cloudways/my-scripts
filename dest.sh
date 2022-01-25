@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 13:47 PST 25/01/22
+# Updated 13:59 PST 25/01/22
 set -e
 dest_db=$(pwd | awk -F "/" '{print $5}');
 dest_db_pw=$1
@@ -14,7 +14,7 @@ get_db(){
         read -p 'DB name(Destination): ' dest_db
 }
 get_pw(){
-        read -p 'DB Password(Destination): ' dest_db_pw
+        echo -n 'DB Password(Destination): ' && read -s dest_db_pw
 }
 
 echo $(tput setaf 3)P.S. $(tput setaf 7)Reset Permissions to Master User on UI before proceeding$'\n'

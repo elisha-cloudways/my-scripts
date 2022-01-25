@@ -1,8 +1,8 @@
 #!/bin/bash
 # Updated 19:17 PST 24/01/22
 set -e
-dest_db=$1
-dest_db_pw=$2
+dest_db=$(pwd | awk -F "/" '{print $5}');
+dest_db_pw=$1
 # prefix=$3
 dbaccess="denied"
 tab_prefix=$(head -n1 conf-data.txt);
@@ -46,7 +46,7 @@ verify_creds(){
 }
 
 # Check if db details are provided when running the script
-if [ -z $dest_db ] && [ -z $dest_db_pw ]; then
+if [ -z $dest_db_pw ]; then
         get_credentials;
         verify_creds;
 else

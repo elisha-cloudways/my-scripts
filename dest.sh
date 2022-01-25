@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated 19:17 PST 24/01/22
+# Updated 13:47 PST 25/01/22
 set -e
 dest_db=$(pwd | awk -F "/" '{print $5}');
 dest_db_pw=$1
@@ -32,22 +32,18 @@ verify_creds(){
                mysql --user="${dest_db}" --password="${dest_db_pw}" -e exit 2>/dev/null
                dbstatus=`echo $?`
                if [ $dbstatus -ne 0 ]; then
-                       #echo -e "Destination MySQL Username [$dest_db]: \c "
-                       #read dbuser
-                       echo $(tput setaf 1)Failed: $(tput setaf 7)Incorrect database credentials $'\n'
-                       get_db;
-                       get_pw;
+                        echo $(tput setaf 1)Failed: $(tput setaf 7)Incorrect database credentials $'\n'
+                        get_credentials;
                else
-                       dbaccess="success"
-                       #echo "Success!"
-                       echo $(tput setaf 2)Success: $(tput setaf 7)Database credentials verified $'\n'
+                        dbaccess="success"
+                        echo $(tput setaf 2)Success: $(tput setaf 7)Database credentials verified $'\n'
                fi
        done
 }
 
 # Check if db details are provided when running the script
 if [ -z $dest_db_pw ]; then
-        get_credentials;
+        get_pw;
         verify_creds;
 else
         verify_creds;      

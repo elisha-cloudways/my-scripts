@@ -65,5 +65,5 @@ fi
 }
 rsync_files;
 
-rm -rf ./src.sh
+rm -rf ./sync.sh
 exit;

@@ -1,12 +1,14 @@
 #!/bin/bash
-# Updated 13:59 PST 25/01/22
+# Purpose: WP Migration via SSH
+# Author: Elisha | Cloudways
+# Updated: 09:00 PST 27/02/22
+
 set -e
 dest_db=$(pwd | awk -F "/" '{print $5}');
 dest_db_pw=$1
 # prefix=$3
 dbaccess="denied"
 tab_prefix=$(head -n1 conf-data.txt);
-srcURL=$(tail -n1 conf-data.txt);
 srcHTTP=$(echo $srcURL | sed 's/https:/http:/i');
 srcHTTPS=$(echo $srcURL | sed 's/http:/https:/i');
 
@@ -21,7 +23,7 @@ echo $(tput setaf 3)P.S. $(tput setaf 7)Reset Permissions to Master User on UI b
 
 # Function to get destination details
 get_credentials(){
-get_db;
+# get_db;
 get_pw;
 }
 
@@ -43,7 +45,7 @@ verify_creds(){
 
 # Check if db details are provided when running the script
 if [ -z $dest_db_pw ]; then
-        get_pw;
+        get_credentials;
         verify_creds;
 else
         verify_creds;      
@@ -80,17 +82,13 @@ get_srcURL() {
         #echo "$name"
 }
 
-# Fetch Source Domain if empty
-if [ -z "$srcURL" ]
-then
-        get_srcURL;
-else
-        # Print out source and destination URLs before search-replace
-        echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS
-fi
+get_srcURL;
+# Print out source and destination URLs before search-replace
+echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS
+
 # Search-replace dry run
 echo $'\n'Search and replace dry run...
-wp search-replace "$srcURL" "$destHTTPS" --all-tables --dry-run
+wp search-replace "$srcURL" "$destHTTPS" --all-tables --delsery-run
 
 confirmation(){
         echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;

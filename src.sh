@@ -1,5 +1,7 @@
 #!/bin/bash
-# Updated 22:21 PST 23/01/22
+# Purpose: WP Migration via SSH
+# Author: Elisha | Cloudways
+# Updated: 08:54 PST 27/02/22
 set -e
 
 dest_db=$1
@@ -56,7 +58,8 @@ else
 fi
 
 # Fetch source URL
-mysql -u $srcusr -p$srcpwd -NB $srcdb -e "SELECT option_value FROM wp_options WHERE option_name = 'home';" >> conf-data.txt
+# Breaks when prefix is different 
+#mysql -u $srcusr -p$srcpwd -NB $srcdb -e "SELECT option_value FROM wp_options WHERE option_name = 'home';" >> conf-data.txt
 
 # Export database 
 export_db(){

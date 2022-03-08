@@ -88,7 +88,7 @@ echo $(tput setaf 3) $'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)De
 
 # Search-replace dry run
 echo $'\n'Search and replace dry run...
-wp search-replace "$srcURL" "$destHTTPS" --all-tables --delsery-run
+wp search-replace "$srcURL" "$destHTTPS" --all-tables --dry-run
 
 confirmation(){
         echo $(tput setaf 3)$'\n'Source = $(tput setaf 7)$srcURL $'\n'$(tput setaf 3)Destination = $(tput setaf 7)$destHTTPS$'\n'Do you wish to $(tput setaf 1)proceed$(tput setaf 7)?;

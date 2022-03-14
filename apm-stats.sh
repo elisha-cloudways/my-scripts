@@ -21,5 +21,5 @@ until_param=$(date --date="$date_new $time_in_UTC UTC +$interval_in_mins min" -u
 
 cd /home/master/applications/
 for A in $(ls | awk '{print $NF}'); do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic --from $from_param --until $until_param; sudo apm -s $A mysql --from $from_param --until $until_param; sudo apm -s $A php --slow_pages --from $from_param --until $until_param; done
-#cd - && rm apm-stats.sh;
-#exit;
+cd - && rm apm-stats.sh;
+exit;

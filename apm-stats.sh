@@ -1,10 +1,10 @@
 #!/bin/bash
 # Purpose: Get server stats for a certain duration
 # Author: Elisha | Cloudways
-# Last Edited: 15/03/2022:17:29
+# Last Edited: 16/03/2022:02:34
 
 set -e
-#cd /home/master/applications/
+cd /home/master/applications/
 date_to_check=$1
 time_in_UTC=$2
 interval_in_mins=$3

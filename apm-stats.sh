@@ -1,7 +1,7 @@
 #!/bin/bash
 # Purpose: Get server stats for a certain duration
 # Author: Elisha | Cloudways
-# Last Edited: 16/03/2022:02:34
+# Last Edited: 18/03/2022:15:30
 
 set -e
 cd /home/master/applications/
@@ -21,9 +21,19 @@ yy=$(echo $date_to_check | cut -d '/' -f3);
 # Convert input date to m/d/y format 
 date_new="$mm/$dd/$yy"
 
-from_param=$(date --date="$date_new $time_in_UTC UTC -$interval_in_mins $iv" -u +'%d/%m/%Y:%H:%M');
+time_a="$date_to_check:$time_in_UTC"
+time_b=$(date --date="$date_new $time_in_UTC UTC $interval_in_mins $iv" -u +'%d/%m/%Y:%H:%M');
+time_op=$(echo $interval_in_mins |  cut -c1-1);
 
-until_param=$(date --date="$date_new $time_in_UTC UTC +$interval_in_mins $iv" -u +'%d/%m/%Y:%H:%M');
+if [[ "$time_op" = "-" ]];
+then
+        from_param=$time_b;
+        until_param=$time_a;
+elif [[ "$time_op" = "+" ]];
+then
+        from_param=$time_a;
+        until_param=$time_b;
+fi
 
 echo Stats from $(tput setaf 3)$from_param $(tput setaf 7)to $(tput setaf 3)$until_param $(tput setaf 7)$'\n'
 for A in $(ls | awk '{print $NF}'); do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic --from $from_param --until $until_param; sudo apm -s $A mysql --from $from_param --until $until_param; sudo apm -s $A php --slow_pages --from $from_param --until $until_param; done
@@ -44,5 +54,5 @@ elif [ -z $iv ]
     get_stats;
 fi;
 
-cd - && rm apm-stats.sh;
+# cd - && rm apm-stats.sh;
 exit;

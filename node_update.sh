@@ -4,5 +4,3 @@ curl https://gist.githubusercontent.com/cloudways-haider/f7cb6627f6674c263624589
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install node
-cd -
-rm ~/node_update.sh

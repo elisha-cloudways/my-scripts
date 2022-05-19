@@ -1,7 +1,7 @@
 #!/bin/bash
 # Purpose: Debug server load
 # Author: Elisha | Cloudways
-# Last Edited: 18/03/2022:15:30
+# Last Edited: 19/05/2022:21:30
 
 set -e
 cd /home/master/applications/

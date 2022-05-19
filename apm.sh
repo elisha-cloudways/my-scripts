@@ -1,7 +1,7 @@
 #!/bin/bash
 # Purpose: Debug server load
 # Author: Elisha | Cloudways
-# Last Edited: 19/05/2022:21:30
+# Last Edited: 20/05/2022:04:45
 
 set -e
 cd /home/master/applications/
@@ -15,7 +15,7 @@ iv=$4
 # Function to fetch stats for a particular time duration
 get_stats(){
 dd=$(echo $date_to_check | cut -d '/' -f1);
-mm=$(echo $date_to_check | cut -d '/' -f2);
+mm=$(echo $date_to_check | cut -d '/' -f2);Stats from 
 yy=$(echo $date_to_check | cut -d '/' -f3);
 
 # Convert input date to m/d/y format 
@@ -37,7 +37,7 @@ fi
 
 echo Stats from $(tput setaf 3)$from_param $(tput setaf 7)to $(tput setaf 3)$until_param $(tput setaf 7)$'\n'
 top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses --from $from_param --until $until_param -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5) ; done
-for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic --from $from_param --until $until_param; sudo apm -s $A mysql --from $from_param --until $until_param; sudo apm -s $A php --slow_pages --from $from_param --until $until_param; done
+for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic -n5 --from $from_param --until $until_param; sudo apm -s $A mysql -n5 --from $from_param --until $until_param; sudo apm -s $A php -n5 --slow_pages --from $from_param --until $until_param; done
 }
 
 
@@ -46,7 +46,7 @@ if [ -z $date_to_check ] && [ -z $time_in_UTC ] && [ -z $interval_in_mins ] && [
     read -p 'Enter duration: ' dur
     echo "Fetching logs for the last$(tput setaf 1) $dur$(tput setaf 7) ...";
     top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses -l $dur -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5) ; done
-    for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm traffic -s $A -l $dur; sudo apm mysql -s $A -l $dur; sudo apm php -s $A --slow_pages -l $dur; done;
+    for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm traffic -s $A -l $dur -n5; sudo apm mysql -s $A -l $dur -n5; sudo apm php -s $A --slow_pages -l $dur -n5; done;
 
 elif [ -z $iv ]
   then
@@ -59,3 +59,13 @@ fi;
 
 # cd - && rm apm-stats.sh;
 exit;
+
+# USAGE-examples
+
+# bash apm-stats.sh <date> <Time-in-UTC> <time-interval> min/hour/day
+
+# bash apm-stats.sh 19/05/2022 15:00 -15 min (Stats from 19/05/2022:14:45 to 19/05/2022:15:00)
+# bash apm-stats.sh 19/05/2022 15:00 +1 hour (Stats from 19/05/2022:15:00 to 19/05/2022:16:00)
+
+# Example: Idle CPU 0% from 19/05/2022:15:00 to 19/05/2022:15:10
+# bash apm-stats.sh 19/05/2022 15:00 +10 min

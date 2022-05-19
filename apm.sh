@@ -15,7 +15,7 @@ iv=$4
 # Function to fetch stats for a particular time duration
 get_stats(){
 dd=$(echo $date_to_check | cut -d '/' -f1);
-mm=$(echo $date_to_check | cut -d '/' -f2);Stats from 
+mm=$(echo $date_to_check | cut -d '/' -f2);
 yy=$(echo $date_to_check | cut -d '/' -f3);
 
 # Convert input date to m/d/y format 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Purpose: Debug server load
 # Author: Elisha | Cloudways
-# Last Edited: 20/05/2022:04:45
+# Last Edited: 22/05/2022:09:05
 
 set -e
 cd /home/master/applications/
@@ -36,8 +36,8 @@ then
 fi
 
 echo Stats from $(tput setaf 3)$from_param $(tput setaf 7)to $(tput setaf 3)$until_param $(tput setaf 7)$'\n'
-top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses --from $from_param --until $until_param -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5);
-for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic -n5 --from $from_param --until $until_param; sudo apm -s $A mysql -n5 --from $from_param --until $until_param; sudo apm -s $A php -n5 --slow_pages --from $from_param --until $until_param; done
+top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses -f $from_param -u $until_param -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5);
+for A in $top_five; do echo $'\n'$(tput setaf 4)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic -n5 -f $from_param -u $until_param; sudo apm -s $A mysql -n5 -f $from_param -u $until_param; sudo apm -s $A php -n5 --slow_pages -f $from_param -u $until_param; done
 }
 
 

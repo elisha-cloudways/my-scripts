@@ -35,20 +35,20 @@ then
         until_param=$time_b;
 fi
 
-echo $'\n' $(tput setaf 3) ---------- APPLICATION MONITORING STATS ---------- $(tput setaf 7)$'\n'
+# echo $'\n' $(tput setaf 3) ---------- APPLICATION MONITORING STATS ---------- $(tput setaf 7)$'\n'
 echo Stats from $(tput setaf 3)$from_param $(tput setaf 7)to $(tput setaf 3)$until_param $(tput setaf 7)$'\n'
 top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses -f $from_param -u $until_param -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5);
-for A in $top_five; do echo $'\n'$(tput setaf 3)DB: $A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic -n5 -f $from_param -u $until_param; sudo apm -s $A mysql -n5 -f $from_param -u $until_param; sudo apm -s $A php -n5 --slow_pages -f $from_param -u $until_param; done
+for A in $top_five; do echo $'\n'DB: $(tput setaf 3)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm -s $A traffic -n5 -f $from_param -u $until_param; sudo apm -s $A mysql -n5 -f $from_param -u $until_param; sudo apm -s $A php -n5 --slow_pages -f $from_param -u $until_param; done
 }
 
 
 if [ -z $date_to_check ] && [ -z $time_in_UTC ] && [ -z $interval_in_mins ] && [ -z $iv ];
   then
     read -p 'Enter duration: ' dur
-    echo $'\n' $(tput setaf 3) ---------- APPLICATION MONITORING STATS ---------- $(tput setaf 7)$'\n'
+    # echo $'\n' $(tput setaf 3) ---------- APPLICATION MONITORING STATS ---------- $(tput setaf 7)$'\n'
     echo "Fetching logs for the last$(tput setaf 1) $dur$(tput setaf 7) ...";
     top_five=$(for i in $(ls -l | grep -v ^l | awk '{print $NF}' | awk 'FNR > 1'); do count=$(sudo apm -s $i traffic --statuses -l $dur -j | grep -Po "\d..\",\d*" | cut -d ',' -f2 | head -n1); echo $i:$count ; done | sort -k2 -nr -t ":" | cut -d : -f 1 | head -n 5);
-    for A in $top_five; do echo $'\n'$(tput setaf 3)DB: $A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm traffic -s $A -l $dur -n5; sudo apm mysql -s $A -l $dur -n5; sudo apm php -s $A --slow_pages -l $dur -n5; done;
+    for A in $top_five; do echo $'\n'DB: $(tput setaf 3)$A $(tput setaf 7); cat $A/conf/server.nginx | awk '{print $NF}' | head -n1 && sudo apm traffic -s $A -l $dur -n5; sudo apm mysql -s $A -l $dur -n5; sudo apm php -s $A --slow_pages -l $dur -n5; done;
 
 elif [ -z $iv ]
   then

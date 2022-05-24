@@ -59,15 +59,15 @@ elif [ -z $iv ]
     get_stats;
 fi;
 
-# cd - && rm apm-stats.sh;
+# cd - && rm apm.sh;
 exit;
 
 # USAGE-examples
 
-# bash apm-stats.sh <date> <Time-in-UTC> <time-interval> min/hour/day
+# bash apm.sh <date> <Time-in-UTC> <time-interval> min/hour/day
 
-# bash apm-stats.sh 19/05/2022 15:00 -15 min (Stats from 19/05/2022:14:45 to 19/05/2022:15:00)
-# bash apm-stats.sh 19/05/2022 15:00 +1 hour (Stats from 19/05/2022:15:00 to 19/05/2022:16:00)
+# bash apm.sh 19/05/2022 15:00 -15 min (Stats from 19/05/2022:14:45 to 19/05/2022:15:00)
+# bash apm.sh 19/05/2022 15:00 +1 hour (Stats from 19/05/2022:15:00 to 19/05/2022:16:00)
 
 # Example: Idle CPU 0% from 19/05/2022:15:00 to 19/05/2022:15:10
-# bash apm-stats.sh 19/05/2022 15:00 +10 min
+# bash apm.sh 19/05/2022 15:00 +10 min

@@ -1,14 +1,1 @@
-#!/bin/bash
-
-echo -e "\nDisk usage:"; df -h /dev/vda1; echo $'\n'; du -shc /*  2>/dev/null |sort -rh | head -n 6
-cd /home/master/applications/
-for d in *
-do
-        echo $'\n'$d
-        sudo apm -s $d -d
-        echo App folder taking most space: $'\n'
-        du -h -d2 $d/* 2>/dev/null | sort -hr | head -n 4
-done
-cd
-rm ./chkdu.sh
-exit;
+echo -e \"\n\$(tput setaf 3)DISK USAGE:\$(tput setaf 7)\"; df -h /dev/vda1 2>/dev/null; du -shc /*  2>/dev/null |sort -rh | head -n 5; echo \$'\n'\$(tput setaf 3)/var \$(tput setaf 7);du -d2 -hc /var/*  2>/dev/null |sort -rh | head -n 5; cd /home/master/applications; echo \$'\n'\$(tput setaf 3)/home \$(tput setaf 7); du -shc ../* 2>/dev/null | sort -rh | head -n 5; echo \$'\n'\$(tput setaf 3)/home/master/applications \$(tput setaf 7); du -shc ./* 2>/dev/null | sort -rh; echo \$'\n'\$(tput setaf 3)Application usage details: \$(tput setaf 7); for dir in *; do (cd \"\$dir\"; echo \$(tput setaf 4); cat conf/server.nginx | awk '{print \$NF}' | head -n1 && echo \$(tput setaf 7); sudo apm -s \$dir -d && du -h -d2 * 2>/dev/null | sort -hr | head -n 4); done

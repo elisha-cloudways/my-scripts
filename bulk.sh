@@ -1,6 +1,6 @@
 #!/bin/bash
-#read -p "Enter primary email: " email
-#read -p "Enter API key: " apikey
+read -p "Enter primary email: " email
+read -p "Enter API key: " apikey
 
 # FETCH AND STORE ACCESS TOKEN
 get_accesstoken() {

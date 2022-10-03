@@ -63,5 +63,5 @@ ENDSSH
 done
 }
 do_task;
-rm srvip.txt sshusers.txt  sshpw.txt; 
+# rm srvip.txt sshusers.txt  sshpw.txt; 
 exit;

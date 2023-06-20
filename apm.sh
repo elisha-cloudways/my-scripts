@@ -65,6 +65,7 @@ if [ -z $date_to_check ] && [ -z $time_in_UTC ] && [ -z $interval_in_mins ] && [
         echo $'\n'$(tput setaf 1) --- Slow plugins --- $(tput setaf 7);
         echo $slow_plugins;
         echo $'\n'$(tput setaf 1) -------------------- $(tput setaf 7);
+        fi
         done;
 
 elif [ -z $iv ]

@@ -44,8 +44,6 @@ for A in $top_five; do
         sudo apm -s $A traffic -n5 -f $from_param -u $until_param; 
         sudo apm -s $A mysql -n5 -f $from_param -u $until_param; 
         sudo apm -s $A php -n5 --slow_pages -f $from_param -u $until_param;
-        echo $'\n'$(tput setaf 1) --- Slow plugins --- $(tput setaf 7);
-        cat /home/master/applications/$A/logs/php-app.slow.log | grep -ai 'wp-content/plugins' | cut -d " " -f1 --complement | cut -d '/' -f8 | sort | uniq -c | sort -nr; 
         done
 }
 
@@ -62,8 +60,11 @@ if [ -z $date_to_check ] && [ -z $time_in_UTC ] && [ -z $interval_in_mins ] && [
         sudo apm traffic -s $A -l $dur -n5; 
         sudo apm mysql -s $A -l $dur -n5; 
         sudo apm php -s $A --slow_pages -l $dur -n5;
+        slow_plugins=$(cat /home/master/applications/$A/logs/php-app.slow.log | grep -ai 'wp-content/plugins' | cut -d " " -f1 --complement | cut -d '/' -f8 | sort | uniq -c | sort -nr); 
+        if [ -n "$slow_plugins" ]; then 
         echo $'\n'$(tput setaf 1) --- Slow plugins --- $(tput setaf 7);
-        cat /home/master/applications/$A/logs/php-app.slow.log | grep -ai 'wp-content/plugins' | cut -d " " -f1 --complement | cut -d '/' -f8 | sort | uniq -c | sort -nr; 
+        echo $slow_plugins;
+        echo $'\n'$(tput setaf 1) -------------------- $(tput setaf 7);
         done;
 
 elif [ -z $iv ]
